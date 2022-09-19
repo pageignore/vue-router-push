@@ -6,7 +6,6 @@ export function getFirst(str:string) {
 }
 
 export function strToVar(ast:object, str:string) {
-    // console.log(ast, 'ast')
     if(!str) return str;
     return (new Function('ast', `return ${str}`))(ast);
 }
