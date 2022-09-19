@@ -10,7 +10,7 @@ One line command, write router file and create new page file.
 `vrp /user/info/list`
 
 
-Make sure you have `vrp.config.json` in your root directory.
+Make sure you have a file `vrp.config.json` in your root directory.
 
 ```json
 {
@@ -20,7 +20,7 @@ Make sure you have `vrp.config.json` in your root directory.
 }
 ```
 
-The routing configuration is saved using a variable called routes.
+The routing configuration is saved using a variable called `routes` .
 
 ```javascript
 import { createRouter, createWebHistory } from 'vue-router';
