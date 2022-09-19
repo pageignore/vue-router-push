@@ -23,6 +23,15 @@ const routes = [{
       component: () => import('../views/AboutView3.vue')
     }]
   }]
+}, {
+  path: '/user',
+  name: 'user',
+  component: () => import('../views/user.vue'),
+  children: [{
+    path: 'info',
+    name: 'info',
+    component: () => import('../views/user/info.vue')
+  }]
 }];
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

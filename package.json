@@ -4,14 +4,22 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
+    "vrpbuild": "unbuild",
     "preview": "vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
+  "bin": {
+    "vrp": "vrp/index.js"
+  },
+  "type": "module",
   "dependencies": {
+    "fast-glob": "^3.2.12",
+    "find-up": "^6.3.0",
     "pinia": "^2.0.21",
+    "unbuild": "^0.8.11",
     "vue": "^3.2.38",
     "vue-router": "^4.1.5"
   },

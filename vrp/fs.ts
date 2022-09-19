@@ -1,18 +1,7 @@
-import { resolve } from 'path'
-import * as babelParser from '@babel/parser'
-import generate from '@babel/generator';
 import * as fs from 'fs'
+import { findUpSync } from 'find-up'
 
-const ROOT = 'D:/MY/fcp';
-const filePath = 'D:/MY/fcp/src/views';
-
-let rp = '/about/test';
-let target = ['user', 'info'];
-
-const raw = fs.readFileSync(`${ROOT}/src/router/index.ts`, 'utf-8')
-const ast = babelParser.parse(raw, {sourceType: 'module'});
-
-function matchPath(node:any, target:any, level:number, path:string) {
+export function matchPath(node:any, target:any, level:number, path:string) {
     if(!node) {
         return {
             level,
@@ -53,11 +42,17 @@ function matchPath(node:any, target:any, level:number, path:string) {
     };
 }
 
-// let target = ['about', 'profile', 'p4', 'sss', 'sjsjsh'];
-function writeRouterAst(target:Array<any>, path:string, level:number, componentPath:string) {
-    if(level+1 > target.length) return;
-    componentPath += `/${target[level]}`;
-    let component = componentPath + '.vue';
+export function writeRouterAst(ast:object,target:Array<any>, path:string, level:number, componentPath:string) {
+    if(level+1 > target.length) return ast;
+    let component = componentPath;
+    target.forEach((item, index) => {
+        item = getFirst(item);
+        if(index <= level) {
+            component += `/${item}`;
+        }
+    })
+    component = component + '.vue';
+    let name = getFirst(target[level]);
     eval(`
         let len = ${path}.length;
         if(len) {
@@ -123,10 +118,10 @@ function writeRouterAst(target:Array<any>, path:string, level:number, componentP
                     value: {
                         type: 'StringLiteral',
                         extra: {
-                            rawValue: '${target[level]}',
-                            raw: "'${target[level]}'"
+                            rawValue: '${name}',
+                            raw: "'${name}'"
                         },
-                        value: '${target[level]}',
+                        value: '${name}',
                     },
                     kind: 'init',
                 },
@@ -184,13 +179,28 @@ function writeRouterAst(target:Array<any>, path:string, level:number, componentP
     `
     eval(code);
     path += level > 0 ? `['value']['elements'][${len}]['properties'][3]` : `[${len}]['properties'][3]`;
-    writeRouterAst(target, path, level + 1, componentPath);
+    return writeRouterAst(ast, target, path, level + 1, componentPath);
 }
 
-// let target = ['about3', 'profile', 'p3', 'sss', 'sddddss3'];
-function createFile(target:Array<any>) {
-    let path = filePath;
+export function createFile(target:Array<any>, pageDir:string) {
+    let path = pageDir;
+    const templatePath = findUpSync('vrp.template.vue');
+    let template = `<script setup>
+import { reactive, ref } from 'vue';
+</script>
+<template>
+    <div class="">
+        <router-view></router-view>
+    </div>
+</template>
+<style>
+    
+</style>`;
+    if(templatePath) {
+        template = fs.readFileSync(templatePath, 'utf-8');
+    }
     target.forEach((item, index) => {
+        item = getFirst(item);
         if(index < target.length - 1) {
             // create folder
             path += `/${item}`;
@@ -198,7 +208,7 @@ function createFile(target:Array<any>) {
                 fs.mkdirSync(path);
             }
             if(!fs.existsSync(`${path}.vue`)) {
-                fs.writeFile(`${path}.vue`, '1122', (err) => {
+                fs.writeFile(`${path}.vue`, template, (err) => {
                     if(!err) {
                         console.log(`create a file: ${path}.vue`)
                     }
@@ -208,34 +218,19 @@ function createFile(target:Array<any>) {
             // create a file
             path += `/${item}.vue`;
             if(!fs.existsSync(path)) {
-                fs.writeFile(path, '1122', (err) => {
+                fs.writeFile(path, template, (err) => {
                     if(!err) {
                         console.log(`create a file: ${path}`)
                     }
                 });
             }
         }
-        console.log(item, 'item')
-        console.log(index, 'index')
     })
 }
 
-
-// console.log(ast['program']['body'][2]['declarations'][0]['init'], 'ss')
-ast.program.body.forEach((node, index) => {
-    if(node.type === 'VariableDeclaration' && 
-       node.declarations[0] && 
-       node.declarations[0].type === 'VariableDeclarator' &&
-       node.declarations[0].id['name'] === 'routes') {
-        let path = `ast['program']['body'][${index}]['declarations'][0]['init']`
-        let matchRes = matchPath(node.declarations[0].init, target, 0, path);
-        console.log(matchRes, 'matchRes');
-        writeRouterAst(target, matchRes.path, matchRes.level, '../views');
-        createFile(target)
-        // console.log(eval(matchRes.path+'.value.elements[0].properties'), 'vmatchRes.pathmatchRes.path')
-        const { code } = generate(ast);
-        fs.writeFileSync(`${ROOT}/src/router/index.ts`, code);
-        // let res = eval(matchRes.path);
-        // console.log(res, 'ress')
-    }
-})
+function getFirst(str:string) {
+    if(!str) return str;
+    str = str.indexOf(':') >= 0 ? str.split(':')[0] : str;
+    str = str[str.length - 1] === '/' ? str.substring(0, str.length - 1) : str;
+    return str;
+}
