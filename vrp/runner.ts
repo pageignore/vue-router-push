@@ -12,10 +12,8 @@ export async function run() {
         return false;
     }
 
-
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     
-
     const routerPath = join(ROOT, config.routerPath);
     const pageDir = join(ROOT, config.pageDir);
     const componentPrefix = config.componentPrefix;
