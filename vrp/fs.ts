@@ -1,5 +1,5 @@
-import * as fs from 'fs'
-import { findUpSync } from 'find-up'
+import * as fs from 'fs';
+import { join } from 'path';
 
 export function matchPath(node:any, target:any, level:number, path:string) {
     if(!node) {
@@ -184,7 +184,8 @@ export function writeRouterAst(ast:object,target:Array<any>, path:string, level:
 
 export function createFile(target:Array<any>, pageDir:string) {
     let path = pageDir;
-    const templatePath = findUpSync('vrp.template.vue');
+    const ROOT = process.cwd();
+    const templatePath = join(ROOT, 'vrp.template.vue');
     let template = `<script setup>
 import { reactive, ref } from 'vue';
 </script>

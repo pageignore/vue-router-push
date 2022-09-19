@@ -1,6 +1,7 @@
 {
-  "name": "fcp",
+  "name": "vue-router-push",
   "version": "0.0.0",
+  "description": "One line command, write router file and create new page file.",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
@@ -12,7 +13,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "bin": {
-    "vrp": "vrp/index.js"
+    "vrp": "bin/index.mjs"
   },
   "type": "module",
   "dependencies": {
@@ -38,6 +39,7 @@
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",
     "esprima": "^4.0.1",
+    "execa": "^6.1.0",
     "jsdom": "^20.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
