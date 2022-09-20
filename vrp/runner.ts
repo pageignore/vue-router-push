@@ -29,6 +29,7 @@ export async function run() {
         return false;
     }
 
+    // /user/info  /user:id/info
     const target = args[0] && args[0].split(/\/(?!\:)/).filter((item:string) => item);
     if(target.length === 0) {
         console.log('Missing path.');
