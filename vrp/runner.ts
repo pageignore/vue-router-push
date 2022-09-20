@@ -15,6 +15,11 @@ export async function run() {
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     
     const routerPath = join(ROOT, config.routerPath);
+    if(!fs.existsSync(routerPath)) {
+        console.log('Incorrect routing configuration file address.');
+        return false;
+    }
+
     const pageDir = join(ROOT, config.pageDir);
     const componentPrefix = config.componentPrefix;
 
@@ -47,7 +52,7 @@ export async function run() {
             fs.writeFileSync(routerPath, code);
         }
     })
-    
+
     if(!hasRoutes) {
         console.log('Make sure your routing configuration is saved using a variable called `routes` .');
     }
