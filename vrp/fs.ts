@@ -16,7 +16,7 @@ export function matchPath(node:any, target:any, level:number, path:string) {
         node.elements.forEach((n, i) => {
             let flag = false;
             n.properties.forEach((item, itemIndex) => {
-                let regexp = new RegExp(`^/?${target[level]}:?.*$`);
+                let regexp = new RegExp(`^/?${target[level]}(\:.*)?$`);
                 if(item.key.name === 'path' && regexp.test(item.value.value)) {
                     isMatch = true;
                     flag = true;
