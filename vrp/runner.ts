@@ -32,11 +32,13 @@ export async function run() {
 
     const raw = fs.readFileSync(routerPath, 'utf-8')
     const ast = babelParser.parse(raw, {sourceType: 'module'});
+    let hasRoutes = false;
     ast.program.body.forEach((node, index) => {
         if(node.type === 'VariableDeclaration' && 
            node.declarations[0] && 
            node.declarations[0].type === 'VariableDeclarator' &&
            node.declarations[0].id['name'] === 'routes') {
+            hasRoutes = true;
             let path = `ast['program']['body'][${index}]['declarations'][0]['init']`
             let matchRes = matchPath(node.declarations[0].init, target, 0, path);
             const newAst = writeRouterAst(ast, target, matchRes.path, matchRes.level, componentPrefix);
@@ -45,4 +47,8 @@ export async function run() {
             fs.writeFileSync(routerPath, code);
         }
     })
+    
+    if(!hasRoutes) {
+        console.log('Make sure your routing configuration is saved using a variable called `routes` .');
+    }
 }

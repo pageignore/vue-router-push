@@ -194,7 +194,7 @@ import { reactive, ref } from 'vue';
 <style>
     
 </style>`;
-    if(templatePath) {
+    if(fs.existsSync(templatePath)) {
         template = fs.readFileSync(templatePath, 'utf-8');
     }
     target.forEach((item, index) => {
