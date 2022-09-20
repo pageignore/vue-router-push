@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 export function getFirst(str:string) {
     if(!str) return str;
     str = str.indexOf(':') >= 0 ? str.split(':')[0] : str;
@@ -8,4 +10,12 @@ export function getFirst(str:string) {
 export function strToVar(ast:object, str:string) {
     if(!str) return str;
     return (new Function('ast', `return ${str}`))(ast);
+}
+
+export function writeFile(path:string, template:string) {
+    fs.writeFile(path, template, (err) => {
+        if(!err) {
+            console.log(`created a file: ${path}`)
+        }
+    });
 }

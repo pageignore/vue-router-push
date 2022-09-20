@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { join } from 'path';
-import { getFirst, strToVar } from './utils';
+import { getFirst, strToVar, writeFile } from './utils';
+import { templateStr } from './config';
 
 export function matchPath(node:any, target:any, level:number, path:string) {
     if(!node) {
@@ -185,17 +186,7 @@ export function createFile(target:Array<any>, pageDir:string) {
     let path = pageDir;
     const ROOT = process.cwd();
     const templatePath = join(ROOT, 'vrp.template.vue');
-    let template = `<script setup>
-import { reactive, ref } from 'vue';
-</script>
-<template>
-    <div class="">
-        <router-view></router-view>
-    </div>
-</template>
-<style>
-    
-</style>`;
+    let template = templateStr;
     if(fs.existsSync(templatePath)) {
         template = fs.readFileSync(templatePath, 'utf-8');
     }
@@ -208,25 +199,28 @@ import { reactive, ref } from 'vue';
                 fs.mkdirSync(path);
             }
             if(!fs.existsSync(`${path}.vue`)) {
-                ((path) => {
-                    fs.writeFile(`${path}.vue`, template, (err) => {
-                        if(!err) {
-                            console.log(`created a file: ${path}.vue`)
-                        }
-                    });
-                })(path)
+                let p = `${path}.vue`;
+                writeFile(p, template);
+                // ((path) => {
+                //     fs.writeFile(`${path}.vue`, template, (err) => {
+                //         if(!err) {
+                //             console.log(`created a file: ${path}.vue`)
+                //         }
+                //     });
+                // })(path)
             }
         } else {
             // create a file
             path += `/${item}.vue`;
             if(!fs.existsSync(path)) {
-                ((path) => {
-                    fs.writeFile(path, template, (err) => {
-                        if(!err) {
-                            console.log(`created a file: ${path}`)
-                        }
-                    });
-                })(path)
+                writeFile(path, template);
+                // ((path) => {
+                //     fs.writeFile(path, template, (err) => {
+                //         if(!err) {
+                //             console.log(`created a file: ${path}`)
+                //         }
+                //     });
+                // })(path)
             }
         }
     })
