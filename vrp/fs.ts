@@ -56,17 +56,17 @@ export function writeRouterAst(ast:object,target:Array<any>, path:string, level:
     })
     component = component + '.vue';
     let name = getFirst(target[level]);
-    let p = strToVar(ast, path);
-    let l:any = p.length;
-    if(l) {
+    let targetPath = strToVar(ast, path);
+    let targetPathLen:any = targetPath.length;
+    if(targetPathLen) {
         let hasChild = false;
-        p && p.forEach(item => {
+        targetPath && targetPath.forEach(item => {
             if(item.key && item.key.name === 'children') {
                 hasChild = true;
             }
         })
         if(!hasChild && level != 0) {
-            p.push({
+            targetPath.push({
                 type: 'ObjectProperty',
                 method: false,
                 shorthand: false,
@@ -80,12 +80,12 @@ export function writeRouterAst(ast:object,target:Array<any>, path:string, level:
                     elements: []
                 }
             })
-            path = path + '[' + l + ']'
+            path = path + '[' + targetPathLen + ']'
         }
     }
-    let node = l ? p[l] : p;
-    let len = level > 0 ? node.value.elements.length : p.length;
-    node = level > 0 ? node.value.elements : p;
+    let node = targetPathLen ? targetPath[targetPathLen] : targetPath;
+    let len = level > 0 ? node.value.elements.length : targetPath.length;
+    node = level > 0 ? node.value.elements : targetPath;
     node.push({
         type: 'ObjectExpression',
         properties: [
