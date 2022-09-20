@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { join } from 'path';
 import { getFirst, strToVar, writeFile } from './utils';
-import { templateStr } from './config';
+import { ROOT, templateStr, templateFileName } from './config';
 
 export function matchPath(node:any, target:any, level:number, path:string) {
     if(!node) {
@@ -184,8 +184,7 @@ export function writeRouterAst(ast:object,target:Array<any>, path:string, level:
 
 export function createFile(target:Array<any>, pageDir:string) {
     let path = pageDir;
-    const ROOT = process.cwd();
-    const templatePath = join(ROOT, 'vrp.template.vue');
+    const templatePath = join(ROOT, templateFileName);
     let template = templateStr;
     if(fs.existsSync(templatePath)) {
         template = fs.readFileSync(templatePath, 'utf-8');

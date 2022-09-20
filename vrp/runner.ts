@@ -3,12 +3,12 @@ import * as babelParser from '@babel/parser';
 import generate from '@babel/generator';
 import * as fs from 'fs';
 import { matchPath, writeRouterAst, createFile} from './fs';
+import { ROOT, configFileName, routesVariableName } from './config';
 
 export async function run() {
-    const ROOT = process.cwd();
-    const configPath = join(ROOT, 'vrp.config.json');
+    const configPath = join(ROOT, configFileName);
     if(!fs.existsSync(configPath)) {
-        console.log(`Cannot find 'vrp.config.json'`);
+        console.log(`Cannot find '${configFileName}'`);
         return false;
     }
 
@@ -43,7 +43,7 @@ export async function run() {
         if(node.type === 'VariableDeclaration' && 
            node.declarations[0] && 
            node.declarations[0].type === 'VariableDeclarator' &&
-           node.declarations[0].id['name'] === 'routes') {
+           node.declarations[0].id['name'] === routesVariableName) {
             hasRoutes = true;
             let path = `ast['program']['body'][${index}]['declarations'][0]['init']`
             let matchRes = matchPath(node.declarations[0].init, target, 0, path);
@@ -55,6 +55,6 @@ export async function run() {
     })
 
     if(!hasRoutes) {
-        console.log('Make sure your routing configuration is saved using a variable called `routes` .');
+        console.log(`Make sure your routing configuration is saved using a variable called '${routesVariableName}' .`);
     }
 }
