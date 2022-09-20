@@ -13,9 +13,11 @@ export function strToVar(ast:object, str:string) {
 }
 
 export function writeFile(path:string, template:string) {
-    fs.writeFile(path, template, (err) => {
-        if(!err) {
-            console.log(`created a file: ${path}`)
-        }
-    });
+    if(!fs.existsSync(path)) {
+        fs.writeFile(path, template, (err) => {
+            if(!err) {
+                console.log(`created a file: ${path}`)
+            }
+        });
+    }
 }

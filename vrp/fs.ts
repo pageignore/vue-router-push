@@ -198,16 +198,12 @@ export function createFile(target:Array<any>, pageDir:string) {
             if(!fs.existsSync(path)) {
                 fs.mkdirSync(path);
             }
-            if(!fs.existsSync(`${path}.vue`)) {
-                let p = `${path}.vue`;
-                writeFile(p, template);
-            }
+            let p = `${path}.vue`;
+            writeFile(p, template);
         } else {
             // create a file
             path += `/${item}.vue`;
-            if(!fs.existsSync(path)) {
-                writeFile(path, template);
-            }
+            writeFile(path, template);
         }
     })
 }
