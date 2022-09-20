@@ -206,21 +206,25 @@ import { reactive, ref } from 'vue';
                 fs.mkdirSync(path);
             }
             if(!fs.existsSync(`${path}.vue`)) {
-                fs.writeFile(`${path}.vue`, template, (err) => {
-                    if(!err) {
-                        console.log(`create a file: ${path}.vue`)
-                    }
-                });
+                ((path) => {
+                    fs.writeFile(`${path}.vue`, template, (err) => {
+                        if(!err) {
+                            console.log(`created a file: ${path}.vue`)
+                        }
+                    });
+                })(path)
             }
         } else {
             // create a file
             path += `/${item}.vue`;
             if(!fs.existsSync(path)) {
-                fs.writeFile(path, template, (err) => {
-                    if(!err) {
-                        console.log(`create a file: ${path}`)
-                    }
-                });
+                ((path) => {
+                    fs.writeFile(path, template, (err) => {
+                        if(!err) {
+                            console.log(`created a file: ${path}`)
+                        }
+                    });
+                })(path)
             }
         }
     })
