@@ -201,26 +201,12 @@ export function createFile(target:Array<any>, pageDir:string) {
             if(!fs.existsSync(`${path}.vue`)) {
                 let p = `${path}.vue`;
                 writeFile(p, template);
-                // ((path) => {
-                //     fs.writeFile(`${path}.vue`, template, (err) => {
-                //         if(!err) {
-                //             console.log(`created a file: ${path}.vue`)
-                //         }
-                //     });
-                // })(path)
             }
         } else {
             // create a file
             path += `/${item}.vue`;
             if(!fs.existsSync(path)) {
                 writeFile(path, template);
-                // ((path) => {
-                //     fs.writeFile(path, template, (err) => {
-                //         if(!err) {
-                //             console.log(`created a file: ${path}`)
-                //         }
-                //     });
-                // })(path)
             }
         }
     })
