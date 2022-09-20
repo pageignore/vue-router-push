@@ -81,8 +81,9 @@ export function writeRouterAst(ast:object,target:Array<any>, path:string, level:
             path = path + '[' + l + ']'
         }
     }
-    let len = level > 0 ? p.value.elements.length : p.length;
-    let node = level > 0 ? p.value.elements : p;
+    let node = l ? p[l] : p;
+    let len = level > 0 ? node.value.elements.length : p.length;
+    node = level > 0 ? node.value.elements : p;
     node.push({
         type: 'ObjectExpression',
         properties: [
